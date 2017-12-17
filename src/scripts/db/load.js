@@ -12,10 +12,10 @@ const CI = process.env.CI === 'true'
 
 const command = CI
   ? `psql --host localhost -U argos ${config.get('env')} < src/server/db/structure.sql`
-  : `docker exec -i \`docker-compose ps -q postgres\` psql -U argos ${config.get(
+  : `docker exec -i \`docker-compose ps -q postgres\` psql -v ON_ERROR_STOP=1 -U argos ${config.get(
       'env'
     )} < src/server/db/structure.sql`
 
-execAsync(command).catch(err => {
-  display.error(`${err.stderr}\n${err.stdout}`)
+execAsync(command).catch(({ stderr }) => {
+  display.error(`${stderr}`)
 })
