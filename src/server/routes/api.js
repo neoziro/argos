@@ -49,17 +49,17 @@ router.post(
     const data = JSON.parse(req.body.data)
 
     if (!data.token) {
-      throw new HttpError(401, 'Invalid token')
+      throw new HttpError(401, 'Missing token')
     }
 
     if (!data.commit) {
-      throw new HttpError(401, 'Invalid commit')
+      throw new HttpError(401, 'Missing commit')
     }
 
     const repository = await Repository.query().where({ token: data.token }).limit(1).first()
 
     if (!repository) {
-      throw new HttpError(400, `Repository not found (token: "${data.token}")`)
+      throw new HttpError(404, `Repository not found (token: "${data.token}")`)
     }
 
     if (!repository.enabled) {
