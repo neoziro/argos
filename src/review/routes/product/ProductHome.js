@@ -76,7 +76,7 @@ function ProductHome(props) {
             color="accent"
             component={Link}
             variant="button"
-            href="/auth/github-public"
+            href="/auth/github-private"
           >
             {'Try it'}
           </Button>
