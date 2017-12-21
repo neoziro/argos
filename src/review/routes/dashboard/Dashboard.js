@@ -16,7 +16,6 @@ import ScrollView from 'modules/components/ScrollView'
 import LayoutBody from 'modules/components/LayoutBody'
 import actionTypes from 'modules/redux/actionTypes'
 import ReviewFooter from 'review/modules/components/ReviewFooter'
-import AuthorizationNotice from 'review/modules/components/AuthorizationNotice'
 import ReviewAppBar from 'review/modules/components/ReviewAppBar'
 
 const styleSheet = createStyleSheet('Dashboard', theme => ({
@@ -34,7 +33,6 @@ function Dashboard(props) {
   return (
     <ViewContainer>
       <ReviewAppBar />
-      <AuthorizationNotice />
       <ScrollView>
         <LayoutBody margin marginBottom>
           <Grid container spacing={24}>

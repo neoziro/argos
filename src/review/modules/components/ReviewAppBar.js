@@ -11,6 +11,7 @@ import { withStyles, createStyleSheet } from 'material-ui/styles'
 import recompact from 'modules/recompact'
 import Link from 'modules/components/Link'
 import LayoutAppBar from 'modules/components/LayoutAppBar'
+import AuthorizationNotice from 'review/modules/components/AuthorizationNotice'
 
 const styleSheet = createStyleSheet('ReviewAppBar', () => ({
   title: {
@@ -52,68 +53,70 @@ class ReviewAppBar extends Component {
     const logged = Boolean(user)
 
     return (
-      <LayoutAppBar>
-        <Toolbar>
-          <Typography type="title" color="inherit" className={classes.title}>
-            <Link to="/">
-              {'Argos-CI'}
-            </Link>
-          </Typography>
-          {logged &&
-            <Link
-              href="#"
-              onClick={this.handleClickUser}
-              className={classes.user}
-              aria-owns="review-app-bar-menu"
-              aria-haspopup="true"
-            >
-              <Grid container align="center">
-                <Grid item xs>
-                  <Typography color="inherit">
-                    {user.name}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Avatar src={`https://github.com/${user.login}.png?size=${AVATAR_SIZE}`} />
-                </Grid>
-              </Grid>
-            </Link>}
-          {logged &&
-            <Menu
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              id="review-app-bar-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onRequestClose={this.handleRequestClose}
-            >
-              <MenuItem
-                component={Link}
-                variant="button"
-                to="/profile/account"
-                button={false}
-                onClick={this.handleRequestClose}
+      <div>
+        <LayoutAppBar>
+          <Toolbar>
+            <Typography type="title" color="inherit" className={classes.title}>
+              <Link to="/">{'Argos-CI'}</Link>
+            </Typography>
+            {logged && (
+              <Link
+                href="#"
+                onClick={this.handleClickUser}
+                className={classes.user}
+                aria-owns="review-app-bar-menu"
+                aria-haspopup="true"
               >
-                Accounts
-              </MenuItem>
-              <MenuItem
-                component={Link}
-                variant="button"
-                href="/auth/logout"
-                button={false}
-                onClick={this.handleRequestClose}
+                <Grid container align="center">
+                  <Grid item xs>
+                    <Typography color="inherit">{user.name}</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Avatar src={`https://github.com/${user.login}.png?size=${AVATAR_SIZE}`} />
+                  </Grid>
+                </Grid>
+              </Link>
+            )}
+            {logged && (
+              <Menu
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                id="review-app-bar-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onRequestClose={this.handleRequestClose}
               >
-                Sign Out
-              </MenuItem>
-            </Menu>}
-          {!logged &&
-            <Button color="inherit" component={Link} variant="button" href="/auth/github-public">
-              Login
-            </Button>}
-        </Toolbar>
-      </LayoutAppBar>
+                <MenuItem
+                  component={Link}
+                  variant="button"
+                  to="/profile/account"
+                  button={false}
+                  onClick={this.handleRequestClose}
+                >
+                  Accounts
+                </MenuItem>
+                <MenuItem
+                  component={Link}
+                  variant="button"
+                  href="/auth/logout"
+                  button={false}
+                  onClick={this.handleRequestClose}
+                >
+                  Sign Out
+                </MenuItem>
+              </Menu>
+            )}
+            {!logged && (
+              <Button color="inherit" component={Link} variant="button" href="/auth/github-public">
+                Login
+              </Button>
+            )}
+          </Toolbar>
+        </LayoutAppBar>
+        <AuthorizationNotice />
+      </div>
     )
   }
 }
