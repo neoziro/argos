@@ -27,7 +27,7 @@
     "db:seed": "knex seed:run",
     "db:reset": "yarn db:drop && yarn db:create && yarn db:load",
     "heroku-postbuild": "yarn web:build && yarn review:build && yarn db:migrate:latest",
-    "prettier": "find . -name \"*.js\" | grep -v -f .eslintignore | xargs prettier --write --no-semi --single-quote --trailing-comma es5 --print-width 100"
+    "prettier": "git ls-files -- '*.js' | xargs prettier"
   },
   "repository": {
     "type": "git",
