@@ -123,7 +123,8 @@ CREATE TABLE builds (
     "updatedAt" timestamp with time zone NOT NULL,
     "repositoryId" bigint NOT NULL,
     number integer NOT NULL,
-    "jobStatus" job_status
+    "jobStatus" job_status,
+    "externalId" character varying(255)
 );
 
 
@@ -276,6 +277,42 @@ ALTER SEQUENCE repositories_id_seq OWNED BY repositories.id;
 
 
 --
+-- Name: screenshot_batches; Type: TABLE; Schema: public; Owner: argos
+--
+
+CREATE TABLE screenshot_batches (
+    id bigint NOT NULL,
+    "screenshotBucketId" bigint NOT NULL,
+    "externalId" character varying(255) NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE screenshot_batches OWNER TO argos;
+
+--
+-- Name: screenshot_batches_id_seq; Type: SEQUENCE; Schema: public; Owner: argos
+--
+
+CREATE SEQUENCE screenshot_batches_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE screenshot_batches_id_seq OWNER TO argos;
+
+--
+-- Name: screenshot_batches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: argos
+--
+
+ALTER SEQUENCE screenshot_batches_id_seq OWNED BY screenshot_batches.id;
+
+
+--
 -- Name: screenshot_buckets; Type: TABLE; Schema: public; Owner: argos
 --
 
@@ -286,7 +323,8 @@ CREATE TABLE screenshot_buckets (
     branch character varying(255) NOT NULL,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL,
-    "repositoryId" bigint NOT NULL
+    "repositoryId" bigint NOT NULL,
+    "batchTotal" integer
 );
 
 
@@ -364,7 +402,8 @@ CREATE TABLE screenshots (
     name character varying(255) NOT NULL,
     "s3Id" character varying(255) NOT NULL,
     "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL
+    "updatedAt" timestamp with time zone NOT NULL,
+    "screenshotBatchId" bigint
 );
 
 
@@ -578,6 +617,13 @@ ALTER TABLE ONLY repositories ALTER COLUMN id SET DEFAULT nextval('repositories_
 
 
 --
+-- Name: screenshot_batches id; Type: DEFAULT; Schema: public; Owner: argos
+--
+
+ALTER TABLE ONLY screenshot_batches ALTER COLUMN id SET DEFAULT nextval('screenshot_batches_id_seq'::regclass);
+
+
+--
 -- Name: screenshot_buckets id; Type: DEFAULT; Schema: public; Owner: argos
 --
 
@@ -667,6 +713,22 @@ ALTER TABLE ONLY repositories
 
 
 --
+-- Name: screenshot_batches screenshot_batches_pkey; Type: CONSTRAINT; Schema: public; Owner: argos
+--
+
+ALTER TABLE ONLY screenshot_batches
+    ADD CONSTRAINT screenshot_batches_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: screenshot_batches screenshot_batches_screenshotbucketid_externalid_unique; Type: CONSTRAINT; Schema: public; Owner: argos
+--
+
+ALTER TABLE ONLY screenshot_batches
+    ADD CONSTRAINT screenshot_batches_screenshotbucketid_externalid_unique UNIQUE ("screenshotBucketId", "externalId");
+
+
+--
 -- Name: screenshot_buckets screenshot_buckets_pkey; Type: CONSTRAINT; Schema: public; Owner: argos
 --
 
@@ -746,6 +808,13 @@ CREATE INDEX build_notifications_buildid_index ON build_notifications USING btre
 
 
 --
+-- Name: builds_externalid_index; Type: INDEX; Schema: public; Owner: argos
+--
+
+CREATE INDEX builds_externalid_index ON builds USING btree ("externalId");
+
+
+--
 -- Name: builds_number_index; Type: INDEX; Schema: public; Owner: argos
 --
 
@@ -795,6 +864,13 @@ CREATE INDEX repositories_userid_index ON repositories USING btree ("userId");
 
 
 --
+-- Name: screenshot_batches_screenshotbucketid_index; Type: INDEX; Schema: public; Owner: argos
+--
+
+CREATE INDEX screenshot_batches_screenshotbucketid_index ON screenshot_batches USING btree ("screenshotBucketId");
+
+
+--
 -- Name: screenshot_buckets_commit_index; Type: INDEX; Schema: public; Owner: argos
 --
 
@@ -820,6 +896,13 @@ CREATE INDEX screenshots_name_index ON screenshots USING btree (name);
 --
 
 CREATE INDEX screenshots_s3id_index ON screenshots USING btree ("s3Id");
+
+
+--
+-- Name: screenshots_screenshotbatchid_index; Type: INDEX; Schema: public; Owner: argos
+--
+
+CREATE INDEX screenshots_screenshotbatchid_index ON screenshots USING btree ("screenshotBatchId");
 
 
 --
@@ -927,6 +1010,14 @@ ALTER TABLE ONLY repositories
 
 
 --
+-- Name: screenshot_batches screenshot_batches_screenshotbucketid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: argos
+--
+
+ALTER TABLE ONLY screenshot_batches
+    ADD CONSTRAINT screenshot_batches_screenshotbucketid_foreign FOREIGN KEY ("screenshotBucketId") REFERENCES screenshot_buckets(id);
+
+
+--
 -- Name: screenshot_buckets screenshot_buckets_repositoryid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: argos
 --
 
@@ -956,6 +1047,14 @@ ALTER TABLE ONLY screenshot_diffs
 
 ALTER TABLE ONLY screenshot_diffs
     ADD CONSTRAINT screenshot_diffs_comparescreenshotid_foreign FOREIGN KEY ("compareScreenshotId") REFERENCES screenshots(id);
+
+
+--
+-- Name: screenshots screenshots_screenshotbatchid_foreign; Type: FK CONSTRAINT; Schema: public; Owner: argos
+--
+
+ALTER TABLE ONLY screenshots
+    ADD CONSTRAINT screenshots_screenshotbatchid_foreign FOREIGN KEY ("screenshotBatchId") REFERENCES screenshot_batches(id);
 
 
 --
@@ -1041,3 +1140,4 @@ INSERT INTO knex_migrations(name, batch, migration_time) VALUES ('20170319114827
 INSERT INTO knex_migrations(name, batch, migration_time) VALUES ('20170329213934_allow_null_baseScreenshotIds.js', 1, NOW());
 INSERT INTO knex_migrations(name, batch, migration_time) VALUES ('20170402203440_repository_baseline_branch.js', 1, NOW());
 INSERT INTO knex_migrations(name, batch, migration_time) VALUES ('20170628232300_add_scopes_to_users.js', 1, NOW());
+INSERT INTO knex_migrations(name, batch, migration_time) VALUES ('20180323213911_screenshot_batches.js', 1, NOW());
