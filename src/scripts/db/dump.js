@@ -13,7 +13,7 @@ const execAsync = promisify(exec)
 const appendFileAsync = promisify(appendFile)
 const readdirAsync = promisify(readdir)
 const getMigrationInserts = async () => {
-  const migrations = await readdirAsync(join(__dirname, '../../migrations'))
+  const migrations = await readdirAsync(join(__dirname, '../../server/migrations'))
   return migrations
     .map(
       migration =>
