@@ -66,7 +66,11 @@ export async function processBuildNotification(buildNotification) {
     throw new Error('Owner not found')
   }
 
-  const user = await build.repository.getUsers().limit(1).first()
+  const user = await build.repository
+    .getUsers()
+    .orderBy('id', 'asc')
+    .limit(1)
+    .first()
 
   if (!user) {
     throw new Error('User not found')
