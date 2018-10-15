@@ -31,7 +31,7 @@ describe('app routes', () => {
             })
           )
           .expect(res => {
-            expect(res.body.error.message).toBe('Invalid token')
+            expect(res.body.error.message).toBe('Missing token')
           })
           .expect(401)
       })
@@ -135,8 +135,9 @@ describe('app routes', () => {
           jobStatus: 'pending',
           number: 1,
           repositoryId: repository.id,
-          buildUrl: `http://www.test.argos-ci.com/callemall/material-ui/builds/${res.body.build
-            .id}`,
+          buildUrl: `http://www.test.argos-ci.com/callemall/material-ui/builds/${
+            res.body.build.id
+          }`,
         })
         expect(repository.builds[0].compareScreenshotBucket.screenshots[0].name).toBe(name)
       })
