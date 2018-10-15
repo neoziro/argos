@@ -7,20 +7,20 @@ import Button from 'material-ui/Button'
 import Grid from 'material-ui/Grid'
 import Typography from 'material-ui/Typography'
 import Menu, { MenuItem } from 'material-ui/Menu'
-import { withStyles, createStyleSheet } from 'material-ui/styles'
+import { withStyles } from 'material-ui/styles'
 import recompact from 'modules/recompact'
 import Link from 'modules/components/Link'
 import LayoutAppBar from 'modules/components/LayoutAppBar'
 import AuthorizationNotice from 'review/modules/components/AuthorizationNotice'
 
-const styleSheet = createStyleSheet('ReviewAppBar', () => ({
+const styles = {
   title: {
     flex: '1 1 100%',
   },
   user: {
     flexShrink: 0,
   },
-}))
+}
 
 const DEVICE_PIXEL_RATIO = window.devicePixelRatio || 1
 const AVATAR_SIZE = Math.round(DEVICE_PIXEL_RATIO * 40)
@@ -39,7 +39,7 @@ class ReviewAppBar extends Component {
     })
   }
 
-  handleRequestClose = () => {
+  handleClose = () => {
     this.setState({
       open: false,
     })
@@ -56,7 +56,7 @@ class ReviewAppBar extends Component {
       <div>
         <LayoutAppBar>
           <Toolbar>
-            <Typography type="title" color="inherit" className={classes.title}>
+            <Typography variant="title" color="inherit" className={classes.title}>
               <Link to="/">{'Argos-CI'}</Link>
             </Typography>
             {logged && (
@@ -67,7 +67,7 @@ class ReviewAppBar extends Component {
                 aria-owns="review-app-bar-menu"
                 aria-haspopup="true"
               >
-                <Grid container align="center">
+                <Grid container alignItems="center" spacing={16}>
                   <Grid item xs>
                     <Typography color="inherit">{user.name}</Typography>
                   </Grid>
@@ -86,14 +86,14 @@ class ReviewAppBar extends Component {
                 id="review-app-bar-menu"
                 anchorEl={anchorEl}
                 open={open}
-                onRequestClose={this.handleRequestClose}
+                onClose={this.handleClose}
               >
                 <MenuItem
                   component={Link}
                   variant="button"
                   to="/profile/account"
                   button={false}
-                  onClick={this.handleRequestClose}
+                  onClick={this.handleClose}
                 >
                   Accounts
                 </MenuItem>
@@ -102,14 +102,19 @@ class ReviewAppBar extends Component {
                   variant="button"
                   href="/auth/logout"
                   button={false}
-                  onClick={this.handleRequestClose}
+                  onClick={this.handleClose}
                 >
                   Sign Out
                 </MenuItem>
               </Menu>
             )}
             {!logged && (
-              <Button color="inherit" component={Link} variant="button" href="/auth/github-private">
+              <Button
+                color="inherit"
+                component={props => (
+                  <Link {...props} variant="button" href="/auth/github-private" />
+                )}
+              >
                 Login
               </Button>
             )}
@@ -130,7 +135,7 @@ ReviewAppBar.propTypes = {
 }
 
 export default recompact.compose(
-  withStyles(styleSheet),
+  withStyles(styles),
   connect(state => ({
     user: state.data.user,
   }))

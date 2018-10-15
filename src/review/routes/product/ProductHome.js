@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withStyles, createStyleSheet } from 'material-ui/styles'
+import { withStyles } from 'material-ui/styles'
 import Button from 'material-ui/Button'
 import ViewContainer from 'modules/components/ViewContainer'
 import ScrollView from 'modules/components/ScrollView'
@@ -16,7 +16,7 @@ import build from 'review/routes/product/build.png'
 import ci from 'review/routes/product/ci.png'
 import perfect from 'review/routes/product/perfect.png'
 
-const styleSheet = createStyleSheet('ProductHome', theme => ({
+const styles = theme => ({
   beast: {
     padding: theme.spacing.unit * 3,
     position: 'absolute',
@@ -57,7 +57,7 @@ const styleSheet = createStyleSheet('ProductHome', theme => ({
       height: 158,
     },
   },
-}))
+})
 
 function ProductHome(props) {
   const { classes } = props
@@ -72,11 +72,9 @@ function ProductHome(props) {
           beast={<Beast className={classes.beast} />}
         >
           <Button
-            raised
-            color="accent"
-            component={Link}
-            variant="button"
-            href="/auth/github-private"
+            variant="raised"
+            color="secondary"
+            component={props => <Link {...props} variant="button" href="/auth/github-private" />}
           >
             {'Try it'}
           </Button>
@@ -86,7 +84,7 @@ function ProductHome(props) {
           size="large"
           textPosition="left"
           description={`
-            Argos will warn you if any visual regressions is about to be introduced,
+            Argos will warn you if any visual regressions are about to be introduced,
             so they those don't end-up in production.
             We are giving developers high confidence in doing changes so they can quickly iterate.
             You can review visual changes in one click as part of your code review process.
@@ -145,4 +143,4 @@ ProductHome.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styleSheet)(ProductHome)
+export default withStyles(styles)(ProductHome)
