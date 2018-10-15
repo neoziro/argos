@@ -17,7 +17,7 @@ function getMigrationInserts() {
   return migrations
     .map(
       migration =>
-        `INSERT INTO knex_migrations(name, batch, migration_time) VALUES ('${migration}', 1, NOW());\n`
+        `INSERT INTO public.knex_migrations(name, batch, migration_time) VALUES ('${migration}', 1, NOW());\n`
     )
     .join('')
 }
