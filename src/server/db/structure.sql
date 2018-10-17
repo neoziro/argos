@@ -807,6 +807,20 @@ CREATE INDEX build_notifications_buildid_index ON public.build_notifications USI
 
 
 --
+-- Name: builds_basescreenshotbucketid_index; Type: INDEX; Schema: public; Owner: argos
+--
+
+CREATE INDEX builds_basescreenshotbucketid_index ON public.builds USING btree ("baseScreenshotBucketId");
+
+
+--
+-- Name: builds_comparescreenshotbucketid_index; Type: INDEX; Schema: public; Owner: argos
+--
+
+CREATE INDEX builds_comparescreenshotbucketid_index ON public.builds USING btree ("compareScreenshotBucketId");
+
+
+--
 -- Name: builds_externalid_index; Type: INDEX; Schema: public; Owner: argos
 --
 
@@ -884,6 +898,13 @@ CREATE INDEX screenshot_buckets_name_index ON public.screenshot_buckets USING bt
 
 
 --
+-- Name: screenshot_diffs_buildid_index; Type: INDEX; Schema: public; Owner: argos
+--
+
+CREATE INDEX screenshot_diffs_buildid_index ON public.screenshot_diffs USING btree ("buildId");
+
+
+--
 -- Name: screenshots_name_index; Type: INDEX; Schema: public; Owner: argos
 --
 
@@ -902,6 +923,13 @@ CREATE INDEX screenshots_s3id_index ON public.screenshots USING btree ("s3Id");
 --
 
 CREATE INDEX screenshots_screenshotbatchid_index ON public.screenshots USING btree ("screenshotBatchId");
+
+
+--
+-- Name: screenshots_screenshotbucketid_index; Type: INDEX; Schema: public; Owner: argos
+--
+
+CREATE INDEX screenshots_screenshotbucketid_index ON public.screenshots USING btree ("screenshotBucketId");
 
 
 --
@@ -1140,3 +1168,4 @@ INSERT INTO public.knex_migrations(name, batch, migration_time) VALUES ('2017032
 INSERT INTO public.knex_migrations(name, batch, migration_time) VALUES ('20170402203440_repository_baseline_branch.js', 1, NOW());
 INSERT INTO public.knex_migrations(name, batch, migration_time) VALUES ('20170628232300_add_scopes_to_users.js', 1, NOW());
 INSERT INTO public.knex_migrations(name, batch, migration_time) VALUES ('20180323213911_screenshot_batches.js', 1, NOW());
+INSERT INTO public.knex_migrations(name, batch, migration_time) VALUES ('20181017110213_indexes.js', 1, NOW());
